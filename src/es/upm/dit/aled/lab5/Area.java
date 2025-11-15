@@ -40,7 +40,10 @@ public class Area {
 	 * @param position The location of the Area in the GUI.
 	 */
 	public Area(String name, int time, int capacity, Position2D position) {
-		// TODO
+		this.name = name;
+		this.time = time;
+		this.capacity = capacity;
+		this.position = position;
 		this.color = Color.GRAY; // Default color
 	}
 
@@ -80,7 +83,37 @@ public class Area {
 	public Color getColor() {
 		return color;
 	}
+	
+	public int getCapacity() {
+		return capacity;
+	}
+	
+	public synchronized int getNumPatients() {
+		return numPatients;
+	}
+	
+	public synchronized int getWaiting() {
+		return waiting;
+	}
 
+	public synchronized void enter(Patient p) {
+		while(numPatients == capacity) {
+			waiting++;
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			waiting--;
+		}
+		numPatients++;
+	}
+	
+	public synchronized void exit(Patient p) {
+		numPatients--;
+		notifyAll();
+	}
+	
 	/**
 	 * Changes the color of the Area in the GUI.
 	 * 

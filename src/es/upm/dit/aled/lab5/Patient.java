@@ -164,7 +164,19 @@ public class Patient extends Thread {
 	 */
 	@Override
 	public void run() {
-		// TODO
+		while (indexProtocol < protocol.size()) {
+			location.enter(this);
+			attendedAtLocation();
+			location.exit(this);
+			advanceProtocol();
+		}
+		if (indexProtocol == protocol.size()) {
+			location.enter(this);
+			attendedAtLocation();
+			location.exit(this);
+			EmergencyRoomGUI.getInstance().removePatient(this);
+		}
+
 	}
 
 }
